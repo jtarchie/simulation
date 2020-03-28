@@ -2,6 +2,7 @@ package people
 
 import (
 	"github.com/jtarchie/simulation/world"
+	"github.com/kyroy/kdtree"
 	"image/color"
 	"math/rand"
 )
@@ -13,17 +14,6 @@ type Person struct {
 func (p *Person) SetXY(x float64, y float64) {
 	p.x = x
 	p.y = y
-}
-
-func (*Person) Dimensions() int {
-	return 2
-}
-
-func (p *Person) Dimension(i int) float64 {
-	if i == 1 {
-		return p.x
-	}
-	return p.y
 }
 
 func (p *Person) Update(*world.World) error {
@@ -50,3 +40,16 @@ func NewPerson(world *world.World) world.Entity {
 }
 
 var _ world.Entity = &Person{}
+
+func (*Person) Dimensions() int {
+	return 2
+}
+
+func (p *Person) Dimension(i int) float64 {
+	if i == 1 {
+		return p.x
+	}
+	return p.y
+}
+
+var _ kdtree.Point = &Person{}
