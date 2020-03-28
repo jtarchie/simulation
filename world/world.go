@@ -1,4 +1,4 @@
-package main
+package world
 
 import (
 	"github.com/hajimehoshi/ebiten"
@@ -14,7 +14,7 @@ type World struct {
 func (w *World) Update(screen *ebiten.Image) error {
 	image := image.NewRGBA(image.Rect(0, 0, w.width, w.height))
 
-	err := w.entities.Each(func(e entity) error {
+	err := w.entities.Each(func(e Entity) error {
 		err := e.Update(w)
 		if err != nil {
 			return err
@@ -35,9 +35,17 @@ func (w *World) Entities() entities {
 	return w.entities
 }
 
+func (w *World) Height() int {
+	return w.height
+}
+
+func (w *World) Width() int {
+	return w.width
+}
+
 func NewWorld(
 	width, height int,
-	inits []entityInit,
+	inits []EntityInit,
 ) *World {
 	world := &World{
 		width:    width,
@@ -46,8 +54,8 @@ func NewWorld(
 	}
 
 	for _, entityInit := range inits {
-		for i := 0; i < entityInit.num; i++ {
-			world.Entities().Add(entityInit.init(world))
+		for i := 0; i < entityInit.Num; i++ {
+			world.Entities().Add(entityInit.Init(world))
 		}
 	}
 

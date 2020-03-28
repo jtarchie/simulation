@@ -1,6 +1,7 @@
-package main
+package people
 
 import (
+	"github.com/jtarchie/simulation/world"
 	"image/color"
 	"math/rand"
 )
@@ -25,7 +26,7 @@ func (p *Person) Dimension(i int) float64 {
 	return p.y
 }
 
-func (p *Person) Update(*World) error {
+func (p *Person) Update(*world.World) error {
 	return nil
 }
 
@@ -41,11 +42,11 @@ func (p *Person) Color() color.Color {
 	return color.RGBA{255, 255, 255, 1}
 }
 
-func NewPerson(world *World) entity {
+func NewPerson(world *world.World) world.Entity {
 	return &Person{
-		float64(rand.Intn(world.width)),
-		float64(rand.Intn(world.height)),
+		float64(rand.Intn(world.Width())),
+		float64(rand.Intn(world.Height())),
 	}
 }
 
-var _ entity = &Person{}
+var _ world.Entity = &Person{}

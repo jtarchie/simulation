@@ -1,4 +1,4 @@
-package main
+package world
 
 import (
 	"fmt"
@@ -6,12 +6,12 @@ import (
 	"image/color"
 )
 
-type entityInit struct {
-	num int
-	init func(*World) entity
+type EntityInit struct {
+	Num int
+	Init func(*World) Entity
 }
 
-type entity interface {
+type Entity interface {
 	kdtree.Point
 
 	X() float64
@@ -23,7 +23,7 @@ type entity interface {
 
 type entities map[string]*kdtree.KDTree
 
-func (e entities) get(original entity) *kdtree.KDTree {
+func (e entities) get(original Entity) *kdtree.KDTree {
 	t := fmt.Sprintf("%T", original)
 	if _, ok := e[t]; !ok {
 		e[t] = kdtree.New([]kdtree.Point{})
@@ -31,12 +31,12 @@ func (e entities) get(original entity) *kdtree.KDTree {
 	return e[t]
 }
 
-func (e entities) Replace(original, with entity) {
+func (e entities) Replace(original, with Entity) {
 	e.get(original).Remove(original)
 	e.Add(with)
 }
 
-func (e entities) Add(original entity) {
+func (e entities) Add(original Entity) {
 	t := fmt.Sprintf("%T", original)
 	if tree, ok := e[t]; ok {
 		tree.Insert(original)
@@ -45,10 +45,10 @@ func (e entities) Add(original entity) {
 	}
 }
 
-func (e entities) Each(f func(entity) error) error {
+func (e entities) Each(f func(Entity) error) error {
 	for _, tree := range e {
 		for _, point := range tree.Points() {
-			entity := point.(entity)
+			entity := point.(Entity)
 			err := f(entity)
 			if err != nil {
 				return err
@@ -58,7 +58,7 @@ func (e entities) Each(f func(entity) error) error {
 	return nil
 }
 
-func (e entities) FindNearest(from entity, of entity, i int) interface{} {
+func (e entities) FindNearest(from Entity, of Entity, i int) interface{} {
 	points := e.get(of).KNN(from, 1)
 
 	if len(points) == 0 {

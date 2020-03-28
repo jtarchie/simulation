@@ -2,22 +2,24 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten"
+	"github.com/jtarchie/simulation/people"
+	 "github.com/jtarchie/simulation/world"
 	"log"
 )
 
 func main() {
-	world := NewWorld(
+	w := world.NewWorld(
 		500,
 		500,
-		[]entityInit{
-			{1000, NewPerson},
-			{100, NewSalesPerson},
+		[]world.EntityInit{
+			{1000, people.NewPerson},
+			{100, people.NewSalesPerson},
 		},
 	)
 	err := ebiten.Run(
-		world.Update,
-		world.width,
-		world.height,
+		w.Update,
+		w.Width(),
+		w.Height(),
 		2,
 		"Simulation",
 	)
